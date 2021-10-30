@@ -39,5 +39,11 @@ class MemberRepositoryTest {
         });
     }
 
+    @Test
+    public void 이메일로_멤버조회_Test() {
+        final String sampleEmail = "user1@naver.com";
+        Member member = memberRepository.findByEmail(sampleEmail);
+        System.out.println(member);
+    }
 
 }
