@@ -22,7 +22,10 @@
 ## 부족한 부분
 - CSRF 원리
 - spring security는 httpSession을 이용한다?
-
+- jpa fetch type LAZY 꼭 써야 할까?<br>
+ eager로 하면 연관된거 다 가져오긴 할텐데<br>
+- api 예외 처리? (예를 들어 transaction rollback 됐을 때)  <br>
+일단 단순하게 개발하자.
 
 ## concerns
 ### 설정
