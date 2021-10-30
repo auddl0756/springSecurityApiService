@@ -45,5 +45,4 @@ class MemberRepositoryTest {
         Member member = memberRepository.findByEmail(sampleEmail);
         System.out.println(member);
     }
-
 }
