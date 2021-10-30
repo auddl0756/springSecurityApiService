@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class SampleController {
     @GetMapping("/all")
-    public String all(){
-       log.info("모두 접근 가능한 페이지");
-       return "all";
+    public String all() {
+        log.info("모두 접근 가능한 페이지");
+        return "all";
     }
 
     @GetMapping("/member")
-    public String member(){
+    public String member() {
         log.info("멤버 이상 권한만 접근 가능한 페이지");
         return "member";
     }
 
     @GetMapping("/admin")
-    public String admin(){
+    public String admin() {
         log.info("관리자만 접근 가능한 페이지");
         return "admin";
     }
