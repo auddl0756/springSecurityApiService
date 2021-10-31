@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,8 +18,8 @@ class PostRepositoryTest {
 
     @Test
     public void 게시물번호로_조회_Test() {
-        Post post = postRepository.findById(1L);
-        System.out.println(post);
+        Optional<Post> post = postRepository.findById(1L);
+        System.out.println(post.get());
     }
 
     @Test

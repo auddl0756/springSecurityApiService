@@ -1,5 +1,6 @@
 package com.roon.apiservice.controller;
 
+import com.roon.apiservice.dto.PostRequestDTO;
 import com.roon.apiservice.entity.Post;
 import com.roon.apiservice.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,27 +16,27 @@ public class PostController {
     private PostService postService;
 
     @PostMapping
-    public void write(@RequestBody Post post){  //@RequestBody없어도 될 듯?
-        postService.write(post);
+    public void write(@RequestBody PostRequestDTO dto) {  //@RequestBody없어도 될 듯?
+        postService.write(dto);
     }
 
     @GetMapping("/post/{id}")
-    public Post getOne(@PathVariable long id){
+    public Post getOne(@PathVariable long id) {
         return postService.getPostById(id);
     }
 
-    @GetMapping("/{email}")
-    public List<Post> getList(String email){
+    @GetMapping
+    public List<Post> getList(@RequestParam String email) {
         return postService.getPostsByEmail(email);
     }
 
     @PutMapping("/post")
-    public void modify(Post post){
-        postService.modify(post);
+    public void modify(PostRequestDTO dto) {
+        postService.modify(dto);
     }
 
     @DeleteMapping("/post/{id}")
-    public void delete(@PathVariable long id){
+    public void delete(@PathVariable long id) {
         postService.remove(id);
     }
 }

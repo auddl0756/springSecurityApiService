@@ -27,7 +27,7 @@
 - api 예외 처리? (예를 들어 transaction rollback 됐을 때)  <br>
 일단 단순하게 개발하자.
 
-## concerns
+## 기타 특이 사항
 ### 설정
 - application.properties는 commit 하지 않았음
 - mysql 연결 시 8버전 부터 serverTimeZone 설정해줘야 했음
@@ -36,4 +36,6 @@
 - controller에서 void 리턴보단 명시적으로 string 리턴하는게 나은 듯
 - jpa entity에서 enum 타입 속성은 @Enumerated 붙이고 String으로 저장하도록 옵션 주자.
 - JPA에서 @EntityGraph는 왜 쓰는건지?
+- delete도 트랜잭션 설정해야 겠지?<br>
+  delete 시에 격리 수준이 줄 영향 잘 상상 안 됨
 
