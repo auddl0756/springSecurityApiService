@@ -2,6 +2,8 @@ package com.roon.apiservice.config;
 
 import com.roon.apiservice.entity.MemberRole;
 import com.roon.apiservice.security.filter.ApiCheckFilter;
+import com.roon.apiservice.security.filter.ApiLoginFilter;
+import com.roon.apiservice.security.handler.ApiLoginFailHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +25,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new ApiCheckFilter("/posts/**/*");
     }
 
+    @Bean
+    ApiLoginFilter apiLoginFilter() throws Exception {
+        ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login");
+        apiLoginFilter.setAuthenticationManager(authenticationManager());
+
+        apiLoginFilter.setAuthenticationFailureHandler(new ApiLoginFailHandler());
+
+        return apiLoginFilter;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -35,6 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //필터 순서 조정
         http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class); //.class는 어떤 의미지
-
+        http.addFilterBefore(apiLoginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

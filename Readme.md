@@ -1,6 +1,7 @@
 # Spring security api server 연습
 ## 참고 
-코드로 배우는 스프링부트 part 5
+코드로 배우는 스프링부트 part 5 <br>
+[java에서 JSON 응답 만들기](https://harrydony.tistory.com/364)
 
 ## 목적
 1. 도대체 토큰이 뭔지?<br>
@@ -38,4 +39,6 @@
 - JPA에서 @EntityGraph는 왜 쓰는건지?
 - delete도 트랜잭션 설정해야 겠지?<br>
   delete 시에 격리 수준이 줄 영향 잘 상상 안 됨
+  
+
 
