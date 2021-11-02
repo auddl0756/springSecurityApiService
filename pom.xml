@@ -59,6 +59,12 @@
             <version>8.0.14</version>
         </dependency>
 
+        <!-- java에서 json 만들기 위해 -->
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
 
 
     </dependencies>
