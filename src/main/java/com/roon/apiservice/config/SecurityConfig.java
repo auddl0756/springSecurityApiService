@@ -4,6 +4,7 @@ import com.roon.apiservice.entity.MemberRole;
 import com.roon.apiservice.security.filter.ApiCheckFilter;
 import com.roon.apiservice.security.filter.ApiLoginFilter;
 import com.roon.apiservice.security.handler.ApiLoginFailHandler;
+import com.roon.apiservice.security.util.JWTUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,17 +23,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //필터 bean으로 등록
     @Bean
     ApiCheckFilter apiCheckFilter() {
-        return new ApiCheckFilter("/posts/**/*");
+        return new ApiCheckFilter("/posts/**/*", jwtUtil());
     }
 
     @Bean
     ApiLoginFilter apiLoginFilter() throws Exception {
-        ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login");
+        ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login", jwtUtil());
         apiLoginFilter.setAuthenticationManager(authenticationManager());
-
         apiLoginFilter.setAuthenticationFailureHandler(new ApiLoginFailHandler());
 
         return apiLoginFilter;
+    }
+
+    @Bean
+    public JWTUtil jwtUtil() {
+        return new JWTUtil();
     }
 
     @Override
