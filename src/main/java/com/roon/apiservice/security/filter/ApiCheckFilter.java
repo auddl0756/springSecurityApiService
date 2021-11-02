@@ -1,5 +1,6 @@
 package com.roon.apiservice.security.filter;
 
+import com.roon.apiservice.security.util.JWTUtil;
 import lombok.extern.log4j.Log4j2;
 import org.json.simple.JSONObject;
 import org.springframework.util.AntPathMatcher;
@@ -15,12 +16,13 @@ import java.io.PrintWriter;
 
 @Log4j2
 public class ApiCheckFilter extends OncePerRequestFilter {
-    private AntPathMatcher antPathMatcher;
-    private String pattern;
+    private static final AntPathMatcher antPathMatcher = new AntPathMatcher();
+    private final String pattern;
+    private final JWTUtil jwtUtil;
 
-    public ApiCheckFilter(String pattern) {
-        this.antPathMatcher = new AntPathMatcher();
+    public ApiCheckFilter(String pattern, JWTUtil jwtUtil) {
         this.pattern = pattern;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -58,8 +60,17 @@ public class ApiCheckFilter extends OncePerRequestFilter {
         boolean checkResult = false;
         String authHeader = request.getHeader("Authorization");
 
-        if (StringUtils.hasText(authHeader)) {
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             log.info("Authorization 존재 : " + authHeader);
+            try {
+                String email = jwtUtil.validateAndExtract(authHeader.substring(7));
+                log.info("validate result : " + email);
+                checkResult = email.length() > 0;
+
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+
             if (authHeader.equals(AUTH_NUMBER)) {
                 checkResult = true;
             }
