@@ -21,7 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthCheckFilter authCheckFilter() {
-        return new AuthCheckFilter("/posts/**/*");
+        return new AuthCheckFilter("/posts/**/*", jwtUtil());
     }
 
     @Bean

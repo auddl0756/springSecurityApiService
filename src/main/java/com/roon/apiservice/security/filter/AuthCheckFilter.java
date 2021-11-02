@@ -1,5 +1,6 @@
 package com.roon.apiservice.security.filter;
 
+import com.roon.apiservice.security.util.JWTUtil;
 import lombok.extern.log4j.Log4j2;
 import org.json.simple.JSONObject;
 import org.springframework.util.AntPathMatcher;
@@ -21,10 +22,13 @@ public class AuthCheckFilter extends OncePerRequestFilter {
     private static final AntPathMatcher antPathMatcher = new AntPathMatcher();
     private String pattern;
 
-    private static final String AUTH_HEADER_VALUE = "12345678";
+    private JWTUtil jwtUtil;
 
-    public AuthCheckFilter(String pattern) {
+    private static final String JWT_TYPE = "Bearer ";
+
+    public AuthCheckFilter(String pattern, JWTUtil jwtUtil) {
         this.pattern = pattern;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -51,10 +55,15 @@ public class AuthCheckFilter extends OncePerRequestFilter {
 
     private boolean checkHttpAuthHeader(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        if (StringUtils.hasText(authHeader)) {
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith(JWT_TYPE)) {
             log.info("authorization exist : " + authHeader);
-            if (authHeader.equals(AUTH_HEADER_VALUE)) {
-                return true;
+
+            try {
+                String email = jwtUtil.validateAndExtract(authHeader.substring(7));
+                log.info("validate result : " + email);
+                return email.length() > 0;
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         }
 
