@@ -2,6 +2,7 @@ package com.roon.apiservice.config;
 
 import com.roon.apiservice.entity.MemberRole;
 import com.roon.apiservice.security.filter.AuthCheckFilter;
+import com.roon.apiservice.security.filter.LoginFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,8 +19,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthCheckFilter authCheckFilter(){
+    public AuthCheckFilter authCheckFilter() {
         return new AuthCheckFilter("/posts/**/*");
+    }
+
+    @Bean
+    public LoginFilter loginFilter() {
+        return new LoginFilter("/api/login");
     }
 
     @Override
@@ -33,5 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout();
 
         http.addFilterBefore(authCheckFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(loginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

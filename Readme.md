@@ -17,8 +17,10 @@
 
 ## 핵심 포인트
 - 인증(Authentication) vs 인가(Authorization)
-- access denied(403,Forbidden) vs bad credential(401,Unauthorized)
-
+- access denied(403,Forbidden) vs bad credential(401,Unauthorized)<br>
+금지된 것과 권한없음이 명확히 구분되는 개념은 아니다<br>
+401이 로그인부터 실패한 것이고 403은 로그인은 했는데 권한이 없는 리소스에 접근한 경우 발생 가능하다고 말 할 수 있다.
+  
 ## 부족한 부분
 - CSRF 원리
 - spring security는 httpSession을 이용한다?
