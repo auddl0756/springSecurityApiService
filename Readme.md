@@ -1,7 +1,7 @@
 # Spring security api server 연습
 ## 참고 
-코드로 배우는 스프링부트 part 5 <br>
-[java에서 JSON 응답 만들기](https://harrydony.tistory.com/364)
+- 코드로 배우는 스프링부트 part 5 <br>
+- [java에서 JSON 응답 만들기](https://harrydony.tistory.com/364)
 
 ## 목적
 1. 도대체 토큰이 뭔지?<br>
