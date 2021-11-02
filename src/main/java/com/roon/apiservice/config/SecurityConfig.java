@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -18,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthCheckFilter authCheckFilter(){
-        return new AuthCheckFilter();
+        return new AuthCheckFilter("/posts/**/*");
     }
 
     @Override
@@ -30,5 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin();
         http.csrf().disable();
         http.logout();
+
+        http.addFilterBefore(authCheckFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
