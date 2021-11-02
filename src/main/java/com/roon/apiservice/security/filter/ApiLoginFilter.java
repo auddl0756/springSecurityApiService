@@ -1,5 +1,8 @@
 package com.roon.apiservice.security.filter;
 
+import com.roon.apiservice.entity.Member;
+import com.roon.apiservice.security.dto.AuthMemberDTO;
+import com.roon.apiservice.security.util.JWTUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,11 +15,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Log4j2
 public class ApiLoginFilter extends AbstractAuthenticationProcessingFilter {
-    public ApiLoginFilter(String defaultFilterProcessesUrl){
+    private JWTUtil jwtUtil;
+
+    public ApiLoginFilter(String defaultFilterProcessesUrl, JWTUtil jwtUtil) {
         super(defaultFilterProcessesUrl);
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -28,7 +35,7 @@ public class ApiLoginFilter extends AbstractAuthenticationProcessingFilter {
         String password = httpServletRequest.getParameter("password");
 
         UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(email,password);
+                new UsernamePasswordAuthenticationToken(email, password);
 
         return getAuthenticationManager().authenticate(authToken);
     }
@@ -39,6 +46,22 @@ public class ApiLoginFilter extends AbstractAuthenticationProcessingFilter {
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 
+        log.info("authResult = " + authResult);
         log.info(authResult.getPrincipal());
+
+        String email = ((AuthMemberDTO) authResult.getPrincipal()).getUsername();
+
+        String token = null;
+        try {
+            token = jwtUtil.generateToken(email);
+
+            response.setContentType("text/plain");
+            response.getOutputStream().write(token.getBytes(StandardCharsets.UTF_8));
+
+            log.info(token);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }
