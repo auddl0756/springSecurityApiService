@@ -1,5 +1,7 @@
 package com.roon.apiservice.security.filter;
 
+import com.roon.apiservice.security.dto.AuthMemberDTO;
+import com.roon.apiservice.security.util.JWTUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,13 +14,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 //로그인할 때 거치는 필터
 
 @Log4j2
 public class LoginFilter extends AbstractAuthenticationProcessingFilter {
-    public LoginFilter(String defaultFilterProcessUrl) {
+    private JWTUtil jwtUtil;
+
+    public LoginFilter(String defaultFilterProcessUrl, JWTUtil jwtUtil) {
         super(defaultFilterProcessUrl);
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -42,6 +48,22 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
                                             Authentication authResult) throws IOException, ServletException {
         log.info("successful authentication : " + authResult);
         log.info("auth result = " + authResult.getPrincipal());
+
+        String email = ((AuthMemberDTO) authResult.getPrincipal()).getUsername();
+
+        String token = null;
+
+        try {
+            token = jwtUtil.generateToken(email);
+
+            response.setContentType("text/plain");
+            response.getOutputStream().write(token.getBytes(StandardCharsets.UTF_8));
+            log.info(token);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
     }
 
     @Override
