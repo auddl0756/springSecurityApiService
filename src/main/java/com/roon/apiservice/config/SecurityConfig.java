@@ -18,8 +18,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
-    private ApiCheckFilter apiCheckFilter;
+    @Bean
+    ApiCheckFilter apiCheckFilter() {
+        return new ApiCheckFilter("/post/**/*");
+    }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -31,6 +34,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.logout();
 
-        http.addFilterBefore(apiCheckFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
