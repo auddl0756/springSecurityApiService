@@ -2,6 +2,7 @@ package com.roon.apiservice.config;
 
 import com.roon.apiservice.entity.MemberRole;
 import com.roon.apiservice.security.filter.ApiCheckFilter;
+import com.roon.apiservice.security.filter.ApiLoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new ApiCheckFilter("/post/**/*");
     }
 
+    @Bean
+    ApiLoginFilter apiLoginFilter(){
+        return new ApiLoginFilter("/api/login");
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
