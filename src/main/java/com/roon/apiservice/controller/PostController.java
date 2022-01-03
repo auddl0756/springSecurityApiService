@@ -16,7 +16,7 @@ public class PostController {
     private PostService postService;
 
     @PostMapping
-    public void write(@RequestBody PostRequestDTO dto) {  //@RequestBody없어도 될 듯?
+    public void write(@RequestBody PostRequestDTO dto) {
         postService.write(dto);
     }
 
