@@ -18,7 +18,7 @@ public class Post {
     private String title;
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member writer;
 
     public void changeTitle(String title) {
