@@ -27,7 +27,11 @@ public class ApiCheckFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("ApiCheckFilter...");
+        if(antPathMatcher.match(pattern, request.getRequestURI())){ // 패턴에 해당하는 경우만 필터가 동작하도록..
+            log.info("ApiCheckFilter...");
+            return;
+        }
+
         filterChain.doFilter(request, response); // 다음 필터 단계로 넘어가는 역할
     }
 }
