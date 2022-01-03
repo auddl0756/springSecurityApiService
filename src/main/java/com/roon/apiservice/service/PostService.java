@@ -21,14 +21,10 @@ public class PostService {
     private static final int TRANSACTION_TIME_LIMIT = 10;
 
     public Post getPostById(long id) {
-        //return postRepository.findById(id);
-        Optional<Post> result = postRepository.findById(id);
-        return result.orElse(null);
+        return postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("no post with id = " + id));
     }
 
-    //이메일로만 검색하는 dao 메서드 만들기
-    // vs 이메일로 객체 탐색(Mmeber,builder.email(email).build)하고 객체를 dao에게 주는 것
-    // 두 방법이 성능 차이 크려나..?
     public List<Post> getPostsByEmail(String email) {
         Member writer = Member.builder()
                 .email(email)
@@ -37,7 +33,6 @@ public class PostService {
         return postRepository.findAllByWriter(writer);
     }
 
-    // 근데 타임 아웃되면 예외를 처리해야 할텐데?
     @Transactional(timeout = TRANSACTION_TIME_LIMIT)
     public void write(PostRequestDTO dto) {
         //DB에 이미 존재하는 Member를
@@ -59,29 +54,17 @@ public class PostService {
 
     @Transactional(timeout = TRANSACTION_TIME_LIMIT)
     public void modify(PostRequestDTO dto) {
-        // null 보다 optional 쓰는게 더 나은듯
-        // 왜냐면 null로 체크하면 dao 접근 한 번 더 해야 함.
+        Post post = postRepository.findById(dto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("no post with id = " + dto.getId()));
 
-        Optional<Post> result = postRepository.findById(dto.getId());
-
-        Post post = Post.builder()
-                .id(dto.getId())
-                .build();
-
-        if (result.isPresent()) {
-            Post updatedPost = result.get();
-            updatedPost.changeTitle(post.getTitle());
-            updatedPost.changeContent(post.getContent());
-        } else {
-            log.info("해당 글이 존재하지 않는다?");
-        }
+        post.changeTitle(dto.getTitle());
+        post.changeContent(dto.getContent());
     }
 
     public void remove(long id) {
-        Post toDeletePost = Post.builder()
-                .id(id)
-                .build();
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("no post with id = "+ id));
 
-        postRepository.delete(toDeletePost);
+        postRepository.delete(post);
     }
 }
