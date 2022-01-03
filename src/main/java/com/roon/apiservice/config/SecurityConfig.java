@@ -25,8 +25,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    ApiLoginFilter apiLoginFilter(){
-        return new ApiLoginFilter("/api/login");
+    ApiLoginFilter apiLoginFilter() throws Exception {
+        ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login");
+        apiLoginFilter.setAuthenticationManager(authenticationManager());
+
+        return apiLoginFilter;
     }
 
     @Override
@@ -40,5 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout();
 
         http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(apiLoginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
